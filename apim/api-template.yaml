@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: template-app
+spec:
+  selector:
+    matchLabels:
+      app: template-srv
+  template:
+    metadata:
+      labels:
+        app: template-srv
+    spec:
+      containers:
+      - name: template-srv
+        image: acrsspopc01.azurecr.io/template:v1
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name:  template-service
+spec:
+  selector:
+    app:  template-srv
+  type:  LoadBalancer
+  ports:
+  - name: template-port
+    port: 80
+    targetPort: 80
